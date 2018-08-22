@@ -59,6 +59,30 @@ public class Grafo {
 		return cont;
 	}
 	
+	public LinkedList<Map<Integer, Double>> warshall() {
+//		Para k de 0 ate n - 1 faça
+//			Para i de 0 até n - 1 faça
+//				Se fechamento [i][k] então
+//					Para j de 0 até n - 1 faça
+//						Fechamento [i][j] = fechamento [i][j] || fechamento [k][j]
+		LinkedList<Map<Integer, Double>> fechamentoTransitivo = new LinkedList<>(listaDeAdjacencias);
+		
+		for(int k = 0; k < tam; k++) {
+			for(int i = 0; i < tam; i++) {
+				if(fechamentoTransitivo.get(i).containsKey(k)) {
+					for(int j = 0; j < tam; j++) {
+//						if(fechamentoTransitivo.get(i).containsKey(j)) {
+//							fechamentoTransitivo.get(i).put(key, value)	
+//						}
+					}
+				}
+			}	
+		}
+		
+		return fechamentoTransitivo;
+		
+	}
+	
 	public void imprimir() {
 		System.out.println("Vetores:");
 		for (int i = 0; i < tam; i++) {
