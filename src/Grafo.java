@@ -1,3 +1,4 @@
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,9 +7,9 @@ import java.util.Map;
 
 public class Grafo {
 	private static final boolean MEMBRO = true;
-	private static final boolean NMEMBRO = false;
-	private static final int INFINITO = 99999999;
-	
+	private static final boolean NAOMEMBRO = false;
+	private static final double INFINITO = 99999999.0;
+
 	private int tam;
 	private LinkedList<Map<Integer, Double>> listaDeAdjacencias;
 	private List<Vertice> vertices;
@@ -17,11 +18,11 @@ public class Grafo {
 		tam = n;
 		vertices = new ArrayList<>();
 		listaDeAdjacencias = new LinkedList<>();
-		
+
 		for(int i = 0; i < n; i++) {
 			vertices.add(new Vertice());
 		}
-		
+
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				listaDeAdjacencias.add(new HashMap<>());
@@ -36,7 +37,7 @@ public class Grafo {
 		}
 		return false;
 	}
-	
+
 	public boolean cria_adjacencia(int i, int j, double peso) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
 			listaDeAdjacencias.get(i).put(j, peso);
@@ -44,7 +45,7 @@ public class Grafo {
 		}
 		return false;
 	}
-	
+
 	public boolean remove_adjacencia(int i, int j) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && listaDeAdjacencias.get(i).containsKey(j)) {
 			listaDeAdjacencias.get(i).remove(j);
@@ -52,7 +53,7 @@ public class Grafo {
 		}
 		return false;
 	}
-	
+
 	public int adjacentes(int i, Vertice[] v) {
 		int cont = 0;
 		Map<Integer, Double> m = listaDeAdjacencias.get(i);
@@ -62,7 +63,7 @@ public class Grafo {
 		}
 		return cont;
 	}
-	
+
 	public boolean[][] m1() {
 		boolean[][] m = new boolean[tam][tam];
 		for(int i = 0; i < tam; i++) {
@@ -74,13 +75,13 @@ public class Grafo {
 				}
 			}
 		}
-				
+
 		return m;
 	}
-	
+
 	boolean[][] fechamento() { 
 		boolean fechamento[][] = this.m1();
-		
+
 		//Warshall
 		for(int k = 0; k < tam; k++) {
 			for(int i = 0; i < tam; i++) {
@@ -90,10 +91,64 @@ public class Grafo {
 				}
 			}
 		}
-		
 		return fechamento;
 	}
-	
+
+	public double melhorCaminho(int vOrigem, int vDestino) {
+		double distancia[] = new double[tam];
+		int caminho[] = new int[tam];
+		boolean perm[]  = new boolean[tam];
+		int vCorrente, i, k=vOrigem;
+		double menorDist, novaDist, distCorrente;
+
+		//inicialização
+		for(i=0; i < tam; ++i) {
+			perm[i] = NAOMEMBRO;
+			distancia[i] = INFINITO;
+			caminho[i] = -1;
+		}
+
+		perm[vOrigem] = MEMBRO;
+		distancia[vOrigem] = 0;
+		vCorrente = vOrigem;
+		while(vCorrente != vDestino) {
+			menorDist = INFINITO;
+			distCorrente = distancia[vCorrente];
+			for(i = 0; i < tam; i++) {
+				if(!perm[i]) {
+					if(listaDeAdjacencias.get(vCorrente).containsKey(i)) {
+						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
+						if(novaDist < distancia[i]) {
+							distancia[i] = novaDist;
+							caminho[i] = vCorrente;						
+						}
+						if(distancia[i] < menorDist) {
+							menorDist = distancia[i];
+							k = i;
+						}
+					}
+				}
+			}
+			vCorrente = k;
+			perm[vCorrente] = MEMBRO;
+		}
+
+		imprimeCaminho(vOrigem, vDestino, caminho);
+
+		return distancia[vDestino];
+	}
+
+	public void imprimeCaminho(int vOrigem, int vDestino, int caminho[]) {
+		System.out.println(MessageFormat.format("Menor caminho para chegar de {0} até {1}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome()));
+		System.out.print(vertices.get(vDestino).getNome() + " ");
+		int i = caminho[vDestino];
+		while(i != vOrigem) {
+			System.out.print(vertices.get(i).getNome() + " ");
+			i = caminho[i];
+		}
+		System.out.println(vertices.get(i).getNome());
+	}
+
 	public void imprimir() {
 		System.out.println("Vetores:");
 		for (int i = 0; i < tam; i++) {
@@ -101,9 +156,9 @@ public class Grafo {
 			vertices.get(i).imprimir();
 			System.out.println();
 		}
-		
+
 		System.out.println("Lista de adjacencias:");
-		
+
 		int cont = 0;
 		for(Map<Integer, Double> m : listaDeAdjacencias) {
 			if(!m.isEmpty()) {
