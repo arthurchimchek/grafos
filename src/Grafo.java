@@ -67,13 +67,11 @@ public class Grafo {
 		boolean[][] m = new boolean[tam][tam];
 		for(int i = 0; i < tam; i++) {
 			for(int j = 0; j < tam; j++) {
-				m[i][j] = false;
-			}
-		}
-		
-		for(int i = 0; i < tam; i++) {
-			for(int k : listaDeAdjacencias.get(i).keySet()) {
-				m[i][k] = true; 
+				if(listaDeAdjacencias.get(i).containsKey(j)) {
+					m[i][j] = true;
+				} else {
+					m[i][j] = false;	
+				}
 			}
 		}
 				
