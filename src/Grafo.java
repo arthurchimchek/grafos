@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Grafo {
+	private static final boolean MEMBRO = true;
+	private static final boolean NMEMBRO = false;
+	private static final int INFINITO = 99999999;
+	
 	private int tam;
 	private LinkedList<Map<Integer, Double>> listaDeAdjacencias;
 	private List<Vertice> vertices;
@@ -59,28 +63,37 @@ public class Grafo {
 		return cont;
 	}
 	
-	public LinkedList<Map<Integer, Double>> warshall() {
-//		Para k de 0 ate n - 1 faça
-//			Para i de 0 até n - 1 faça
-//				Se fechamento [i][k] então
-//					Para j de 0 até n - 1 faça
-//						Fechamento [i][j] = fechamento [i][j] || fechamento [k][j]
-		LinkedList<Map<Integer, Double>> fechamentoTransitivo = new LinkedList<>(listaDeAdjacencias);
-		
-		for(int k = 0; k < tam; k++) {
-			for(int i = 0; i < tam; i++) {
-				if(fechamentoTransitivo.get(i).containsKey(k)) {
-					for(int j = 0; j < tam; j++) {
-//						if(fechamentoTransitivo.get(i).containsKey(j)) {
-//							fechamentoTransitivo.get(i).put(key, value)	
-//						}
-					}
-				}
-			}	
+	public boolean[][] m1() {
+		boolean[][] m = new boolean[tam][tam];
+		for(int i = 0; i < tam; i++) {
+			for(int j = 0; j < tam; j++) {
+				m[i][j] = false;
+			}
 		}
 		
-		return fechamentoTransitivo;
+		for(int i = 0; i < tam; i++) {
+			for(int k : listaDeAdjacencias.get(i).keySet()) {
+				m[i][k] = true; 
+			}
+		}
+				
+		return m;
+	}
+	
+	boolean[][] fechamento() { 
+		boolean fechamento[][] = this.m1();
 		
+		//Warshall
+		for(int k = 0; k < tam; k++) {
+			for(int i = 0; i < tam; i++) {
+				if(fechamento[i][k]) {
+					for(int j = 0; j < tam; j++)
+						fechamento[i][j] = fechamento[i][j] || fechamento[k][j]; 
+				}
+			}
+		}
+		
+		return fechamento;
 	}
 	
 	public void imprimir() {
