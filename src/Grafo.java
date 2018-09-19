@@ -37,6 +37,20 @@ public class Grafo {
 		}
 		return false;
 	}
+	
+	public int get_size(){
+		return vertices.size();
+	}
+	
+	public int procura_vertice(String nomeVertice){
+		for(int i = 0; i < vertices.size(); i++)
+		{
+			Vertice v = vertices.get(i);
+			if(v.getNome().equals(nomeVertice))
+				return i;
+		}
+		return -1;
+	}
 
 	public boolean cria_adjacencia(int i, int j, double peso) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
