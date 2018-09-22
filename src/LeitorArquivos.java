@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LeitorArquivos {
-	//	private final String DIRETORIO = "C:\\www\\grafos\\base_eron\\amostra";
-	private final String DIRETORIO = "D:\\Dev\\amostra-enron";
+	private final String DIRETORIO = "C:\\www\\grafos\\base_eron\\amostra";
+//	private final String DIRETORIO = "D:\\Dev\\amostra-enron";
 	private final String SENT_ITEMS = "sent_items";
 	private final String SENT_EMAIL = "_sent_mail";
 	private File root;

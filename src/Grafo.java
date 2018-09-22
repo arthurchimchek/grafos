@@ -61,6 +61,15 @@ public class Grafo {
 		return vertices.size();
 	}
 	
+	public int numeroArestas(){
+		int arestas = 0;
+		for(int i = 0; i < listaDeAdjacencias.size(); i++){
+			Map<Integer, Double> temp = listaDeAdjacencias.get(i);
+			arestas += temp.size();
+		}
+		return arestas;
+	}
+	
 	public int procuraVertice(String nomeVertice){
 		for(int i = 0; i < vertices.size(); i++)
 		{
