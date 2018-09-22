@@ -57,7 +57,7 @@ public class Grafo {
 		return false;
 	}
 	
-	public int getSize(){
+	public int getNumeroDeVertices(){
 		return vertices.size();
 	}
 	
