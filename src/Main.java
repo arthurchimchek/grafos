@@ -7,5 +7,10 @@ public class Main {
 		Grafo g = leitor.readDirectory();
 		System.out.println("Numero total de vértices: " + g.getNumeroDeVertices());
 		g.imprimir();
+		System.out.println();
+		g.imprimir20ComMaiorGrauDeSaida();
+		System.out.println();
+		g.imprimir20ComMaiorGrauDeEntrada();
+		
 	}
 }

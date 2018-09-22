@@ -1,5 +1,7 @@
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class Grafo {
 		return vertices.size();
 	}
 	
-	public int procuraVertice(String nomeVertice){
+	public int procuraVertice(String nomeVertice) {
 		for(int i = 0; i < vertices.size(); i++)
 		{
 			Vertice v = vertices.get(i);
@@ -75,6 +77,10 @@ public class Grafo {
 		if(i < tam && j < tam && i >= 0 && j >= 0) {
 			if(!listaDeAdjacencias.get(i).containsKey(j)) {
 				listaDeAdjacencias.get(i).put(j, 0.0);
+				int grauDeEntradaAtual = vertices.get(j).getGrauDeEntrada();
+				int grauDeSaidaAtual = vertices.get(i).getGrauDeSaida();
+				vertices.get(j).setGrauDeEntrada(grauDeEntradaAtual + 1);
+				vertices.get(i).setGrauDeSaida(grauDeSaidaAtual + 1);
 			}
 			
 			double peso = listaDeAdjacencias.get(i).get(j);
@@ -87,6 +93,10 @@ public class Grafo {
 	public boolean removeAdjacencia(int i, int j) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && listaDeAdjacencias.get(i).containsKey(j)) {
 			listaDeAdjacencias.get(i).remove(j);
+			int grauDeEntradaAtual = vertices.get(j).getGrauDeEntrada();
+			int grauDeSaidaAtual = vertices.get(i).getGrauDeSaida();
+			vertices.get(j).setGrauDeEntrada(grauDeEntradaAtual - 1);
+			vertices.get(i).setGrauDeSaida(grauDeSaidaAtual - 1);
 			return true;
 		}
 		return false;
@@ -208,4 +218,37 @@ public class Grafo {
 			cont++;
 		}
 	}
+	
+	public void imprimir20ComMaiorGrauDeSaida() {
+		List<Vertice> copia = new ArrayList<>(vertices);
+
+		Collections.sort(copia, new Comparator<Vertice>() {
+			@Override
+			public int compare(Vertice o1, Vertice o2) {
+				return o2.getGrauDeSaida() - o1.getGrauDeSaida();
+			}
+		});
+		
+		System.out.println("20 com maior grau de saida:");
+		for (int i = 0; i < 20; i++) {
+			System.out.println(MessageFormat.format("{0}: {1}", copia.get(i).getNome(), copia.get(i).getGrauDeSaida()));
+		}
+	}
+	
+	public void imprimir20ComMaiorGrauDeEntrada() {
+		List<Vertice> copia = new ArrayList<>(vertices);
+
+		Collections.sort(copia, new Comparator<Vertice>() {
+			@Override
+			public int compare(Vertice o1, Vertice o2) {
+				return o2.getGrauDeEntrada() - o1.getGrauDeEntrada();
+			}
+		});
+		
+		System.out.println("20 com maior grau de entrada:");
+		for (int i = 0; i < 20; i++) {
+			System.out.println(MessageFormat.format("{0}: {1}", copia.get(i).getNome(), copia.get(i).getGrauDeEntrada()));
+		}
+	}
+	 
 }

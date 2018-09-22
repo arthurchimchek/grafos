@@ -2,9 +2,29 @@
 public class Vertice {
 	private int id;
 	private String nome;
+	private int grauDeEntrada;
+	private int grauDeSaida;
 	
 	public Vertice() {
 		this.nome = "";
+		this.grauDeEntrada = 0;
+		this.grauDeSaida = 0;
+	}
+
+	public int getGrauDeEntrada() {
+		return grauDeEntrada;
+	}
+
+	public void setGrauDeEntrada(int grauDeEntrada) {
+		this.grauDeEntrada = grauDeEntrada;
+	}
+
+	public int getGrauDeSaida() {
+		return grauDeSaida;
+	}
+
+	public void setGrauDeSaida(int grauDeSaida) {
+		this.grauDeSaida = grauDeSaida;
 	}
 
 	public int getId() {
