@@ -29,6 +29,12 @@ public class Grafo {
 			}
 		}
 	}
+	
+	public Grafo() {
+		tam = 0;
+		vertices = new ArrayList<>();
+		listaDeAdjacencias = new LinkedList<>();
+	}
 
 	public boolean seta_informacao(int i, String nome) {
 		if (vertices.size() > i && i >= 0) {
@@ -38,29 +44,47 @@ public class Grafo {
 		return false;
 	}
 	
-	public int get_size(){
+	public boolean criaVertice(String nomeVertice) {
+		if(procuraVertice(nomeVertice) == -1) {
+			Vertice v = new Vertice();
+			v.setId(vertices.size());
+			v.setNome(nomeVertice);
+			vertices.add(v);
+			tam++;
+			listaDeAdjacencias.add(new HashMap<>());
+			return true;
+		}
+		return false;
+	}
+	
+	public int getSize(){
 		return vertices.size();
 	}
 	
-	public int procura_vertice(String nomeVertice){
+	public int procuraVertice(String nomeVertice){
 		for(int i = 0; i < vertices.size(); i++)
 		{
 			Vertice v = vertices.get(i);
-			if(v.getNome().equals(nomeVertice))
+			if(v != null && v.getNome().equals(nomeVertice))
 				return i;
 		}
 		return -1;
 	}
 
-	public boolean cria_adjacencia(int i, int j, double peso) {
-		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
-			listaDeAdjacencias.get(i).put(j, peso);
+	public boolean criaAdjacencia(int i, int j) {
+		if(i < tam && j < tam && i >= 0 && j >= 0) {
+			if(!listaDeAdjacencias.get(i).containsKey(j)) {
+				listaDeAdjacencias.get(i).put(j, 0.0);
+			}
+			
+			double peso = listaDeAdjacencias.get(i).get(j);
+			listaDeAdjacencias.get(i).put(j, peso + 1);
 			return true;
 		}
 		return false;
 	}
 
-	public boolean remove_adjacencia(int i, int j) {
+	public boolean removeAdjacencia(int i, int j) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && listaDeAdjacencias.get(i).containsKey(j)) {
 			listaDeAdjacencias.get(i).remove(j);
 			return true;

@@ -2,6 +2,10 @@
 public class Vertice {
 	private int id;
 	private String nome;
+	
+	public Vertice() {
+		this.nome = "";
+	}
 
 	public int getId() {
 		return id;
