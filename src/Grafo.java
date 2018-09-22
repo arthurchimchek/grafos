@@ -57,11 +57,11 @@ public class Grafo {
 		return false;
 	}
 	
-	public int getSize(){
+	public int getNumeroDeVertices(){
 		return vertices.size();
 	}
 	
-	public int numeroArestas(){
+	public int getNumeroDeArestas(){
 		int arestas = 0;
 		for(int i = 0; i < listaDeAdjacencias.size(); i++){
 			Map<Integer, Double> temp = listaDeAdjacencias.get(i);

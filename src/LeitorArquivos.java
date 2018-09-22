@@ -75,7 +75,7 @@ public class LeitorArquivos {
 
 				if(idRemetente == -1) {
 					grafo.criaVertice(remetente);
-					idRemetente = grafo.getSize() - 1;
+					idRemetente = grafo.getNumeroDeVertices() - 1;
 				}
 
 				List<String> destinatarios = new ArrayList<>();
@@ -102,7 +102,7 @@ public class LeitorArquivos {
 					idDestinatario = grafo.procuraVertice(d);
 					if(idDestinatario == -1) {
 						grafo.criaVertice(d);
-						idDestinatario = grafo.getSize() - 1;
+						idDestinatario = grafo.getNumeroDeVertices() - 1;
 					}
 
 					grafo.criaAdjacencia(idRemetente, idDestinatario);
