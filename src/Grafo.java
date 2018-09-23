@@ -11,6 +11,7 @@ public class Grafo {
 	private static final boolean MEMBRO = true;
 	private static final boolean NAOMEMBRO = false;
 	private static final double INFINITO = 99999999.0;
+	private static final double INFINITO_NEG = 0.0;
 
 	private int tam;
 	private LinkedList<Map<Integer, Double>> listaDeAdjacencias;
@@ -81,6 +82,14 @@ public class Grafo {
 		}
 		return -1;
 	}
+	
+	public boolean cria_adjacencia(int i, int j, double peso) {
+		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
+			listaDeAdjacencias.get(i).put(j, peso);
+			return true;
+		}
+		return false;
+	}
 
 	public boolean criaAdjacencia(int i, int j) {
 		if(i < tam && j < tam && i >= 0 && j >= 0) {
@@ -150,8 +159,28 @@ public class Grafo {
 		}
 		return fechamento;
 	}
+	
+	public boolean profundidade(int origem, int destino, List<Integer> visitados){
+		if(origem == destino){
+			System.out.print(origem + " ");
+			visitados.add(origem);
+			return true;
+		}
+		else{
+			if(!visitados.contains(origem)){
+				System.out.print(origem + " ");
+				visitados.add(origem);
+				for(int key : listaDeAdjacencias.get(origem).keySet()){
+					if(profundidade(key, destino, visitados)){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
-	public double melhorCaminho(int vOrigem, int vDestino) {
+	public double menorCaminho(int vOrigem, int vDestino) {
 		double distancia[] = new double[tam];
 		int caminho[] = new int[tam];
 		boolean perm[]  = new boolean[tam];
@@ -180,6 +209,50 @@ public class Grafo {
 							caminho[i] = vCorrente;						
 						}
 						if(distancia[i] < menorDist) {
+							menorDist = distancia[i];
+							k = i;
+						}
+					}
+				}
+			}
+			vCorrente = k;
+			perm[vCorrente] = MEMBRO;
+		}
+
+		imprimeCaminho(vOrigem, vDestino, caminho);
+
+		return distancia[vDestino];
+	}
+	
+	public double maiorCaminho(int vOrigem, int vDestino) {
+		double distancia[] = new double[tam];
+		int caminho[] = new int[tam];
+		boolean perm[]  = new boolean[tam];
+		int vCorrente, i, k=vOrigem;
+		double menorDist, novaDist, distCorrente;
+
+		//inicialização
+		for(i=0; i < tam; ++i) {
+			perm[i] = NAOMEMBRO;
+			distancia[i] = INFINITO_NEG;
+			caminho[i] = -1;
+		}
+
+		perm[vOrigem] = MEMBRO;
+		distancia[vOrigem] = 0;
+		vCorrente = vOrigem;
+		while(vCorrente != vDestino) {
+			menorDist = INFINITO_NEG;
+			distCorrente = distancia[vCorrente];
+			for(i = 0; i < tam; i++) {
+				if(!perm[i]) {
+					if(listaDeAdjacencias.get(vCorrente).containsKey(i)) {
+						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
+						if(novaDist > distancia[i]) {
+							distancia[i] = novaDist;
+							caminho[i] = vCorrente;						
+						}
+						if(distancia[i] > menorDist) {
 							menorDist = distancia[i];
 							k = i;
 						}
