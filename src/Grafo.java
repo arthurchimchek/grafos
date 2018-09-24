@@ -11,7 +11,7 @@ public class Grafo {
 	private static final boolean MEMBRO = true;
 	private static final boolean NAOMEMBRO = false;
 	private static final double INFINITO = 99999999.0;
-	private static final double INFINITO_NEG = 0.0;
+	private static final double INFINITO_NEW = 1/10;
 
 	private int tam;
 	private LinkedList<Map<Integer, Double>> listaDeAdjacencias;
@@ -160,18 +160,33 @@ public class Grafo {
 		return fechamento;
 	}
 	
-	public boolean profundidade(int origem, int destino, List<Integer> visitados){
+	public void buscaProfundidade(int x, int y){
+		List<Integer> visitados = new ArrayList<Integer>();
+		List<Integer> caminho = new ArrayList<Integer>();
+		boolean resultado = profundidade(x, y, visitados, caminho);
+		if(!resultado){
+			System.out.println("A origem não consegue chegar ao destino");
+		}
+		else{
+			System.out.print("Caminho: ");
+			for(int i : caminho){
+				System.out.print(i + " ");
+			}
+		}
+	}
+	
+	public boolean profundidade(int origem, int destino, List<Integer> visitados, List<Integer> caminho){
 		if(origem == destino){
-			System.out.print(origem + " ");
+			caminho.add(caminho.size(), origem);
 			visitados.add(origem);
 			return true;
 		}
 		else{
 			if(!visitados.contains(origem)){
-				System.out.print(origem + " ");
+				caminho.add(caminho.size(), origem);
 				visitados.add(origem);
 				for(int key : listaDeAdjacencias.get(origem).keySet()){
-					if(profundidade(key, destino, visitados)){
+					if(profundidade(key, destino, visitados, caminho)){
 						return true;
 					}
 				}
@@ -181,6 +196,11 @@ public class Grafo {
 	}
 
 	public double menorCaminho(int vOrigem, int vDestino) {
+		
+		boolean[][] alcancabilidade = this.fechamento();
+		if(alcancabilidade[vOrigem][vDestino] == false)
+			return -1.0;
+		
 		double distancia[] = new double[tam];
 		int caminho[] = new int[tam];
 		boolean perm[]  = new boolean[tam];
@@ -224,7 +244,12 @@ public class Grafo {
 		return distancia[vDestino];
 	}
 	
-	public double maiorCaminho(int vOrigem, int vDestino) {
+public double maiorCaminho(int vOrigem, int vDestino) {
+		
+		boolean[][] alcancabilidade = this.fechamento();
+		if(alcancabilidade[vOrigem][vDestino] == false)
+			return -1.0;
+		
 		double distancia[] = new double[tam];
 		int caminho[] = new int[tam];
 		boolean perm[]  = new boolean[tam];
@@ -234,7 +259,7 @@ public class Grafo {
 		//inicialização
 		for(i=0; i < tam; ++i) {
 			perm[i] = NAOMEMBRO;
-			distancia[i] = INFINITO_NEG;
+			distancia[i] = INFINITO;
 			caminho[i] = -1;
 		}
 
@@ -242,17 +267,19 @@ public class Grafo {
 		distancia[vOrigem] = 0;
 		vCorrente = vOrigem;
 		while(vCorrente != vDestino) {
-			menorDist = INFINITO_NEG;
+			menorDist = INFINITO;
 			distCorrente = distancia[vCorrente];
 			for(i = 0; i < tam; i++) {
 				if(!perm[i]) {
 					if(listaDeAdjacencias.get(vCorrente).containsKey(i)) {
 						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
-						if(novaDist > distancia[i]) {
+						double test = 1.0 / novaDist;
+						double test2 = 1.0 / distancia[i]; 
+						if(test < test2) {
 							distancia[i] = novaDist;
 							caminho[i] = vCorrente;						
 						}
-						if(distancia[i] > menorDist) {
+						if(distancia[i] > distCorrente){
 							menorDist = distancia[i];
 							k = i;
 						}
@@ -263,7 +290,7 @@ public class Grafo {
 			perm[vCorrente] = MEMBRO;
 		}
 
-		imprimeCaminho(vOrigem, vDestino, caminho);
+		imprimeMaiorCaminho(vOrigem, vDestino, caminho);
 
 		return distancia[vDestino];
 	}
@@ -277,6 +304,19 @@ public class Grafo {
 			i = caminho[i];
 		}
 		System.out.println(vertices.get(i).getNome());
+	}
+	
+	public void imprimeMaiorCaminho(int vOrigem, int vDestino, int caminho[]) {
+		System.out.println(MessageFormat.format("Menor caminho para chegar de {0} até {1}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome()));
+		System.out.print(vertices.get(vDestino).getNome() + " ");
+		int i = caminho[vDestino];
+		while(i != vOrigem) {
+			if(i == -1)
+				break;
+			System.out.print(vertices.get(i).getNome() + " ");
+			i = caminho[i];
+		}
+		System.out.println(vertices.get(vOrigem).getNome() + " ");
 	}
 
 	public void imprimir() {
