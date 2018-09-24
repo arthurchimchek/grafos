@@ -98,6 +98,14 @@ public class Grafo {
 		}
 		return false;
 	}
+	
+	public boolean cria_adjacencia(int i, int j, double peso) {
+		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
+			listaDeAdjacencias.get(i).put(j, peso);
+			return true;
+		}
+		return false;
+	}
 
 	public boolean removeAdjacencia(int i, int j) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && listaDeAdjacencias.get(i).containsKey(j)) {
@@ -258,6 +266,41 @@ public class Grafo {
 		for (int i = 0; i < 20; i++) {
 			System.out.println(MessageFormat.format("{0}: {1}", copia.get(i).getNome(), copia.get(i).getGrauDeEntrada()));
 		}
+	}
+	
+	public boolean largura(int destino, List<Integer> fila, List<Integer> visitados) {
+		if(fila.isEmpty()) {
+			return false;
+		} else {
+			int x = fila.remove(0);
+			visitados.add(x);
+			if(x == destino) {
+				return true;
+			} else {
+				Map<Integer, Double> adjacentesDeX = listaDeAdjacencias.get(x);
+				for(int i : adjacentesDeX.keySet()) {
+					if(!visitados.contains(i) && !fila.contains(i)) {
+						fila.add(i);
+					}
+				}
+				return largura(destino, fila, visitados);
+			}
+		}
+	}
+	
+	public void buscaLargura(int origem, int destino) {
+		List<Integer> visitados = new ArrayList<>();
+		List<Integer> fila = new ArrayList<>();
+		fila.add(origem);
+		boolean chegaAoDestino = largura(destino, fila, visitados);
+		if(!chegaAoDestino) {
+			System.out.println("Não é possivel chegar ao destino a partir desta origem!");
+		}
+		System.out.println(MessageFormat.format("Nós visitados de {0} a {1}:", origem, destino));
+		for(int i : visitados) {
+			System.out.print(i + " ");
+		}
+		System.out.println();
 	}
 	 
 }
