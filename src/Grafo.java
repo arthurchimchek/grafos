@@ -269,47 +269,22 @@ public class Grafo {
 		//inicialização
 		for(i=0; i < tam; ++i) {
 			perm[i] = NAOMEMBRO;
-			distancia[i] = INFINITO;
+			distancia[i] = 1/INFINITO;
 			caminho[i] = -1;
 		}
 
 		perm[vOrigem] = MEMBRO;
 		distancia[vOrigem] = 0;
 		vCorrente = vOrigem;
-//		
-//		while(vCorrente != vDestino){
-//			if(listaDeAdjacencias.get(vCorrente) != null){
-//				distCorrente = distancia[vCorrente];
-//				for(i =0; i < tam; i++){
-//					if(listaDeAdjacencias.get(vCorrente).containsKey(i)){
-//						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
-//						if( (1.0 / novaDist) < (1.0 / distancia[i])) {
-//							distancia[i] = novaDist;
-//							caminho[i] = vCorrente;						
-//						}
-//					}
-//				}
-//			}
-//			maiorDist = 1 / INFINITO;
-//			for(i =0; i < tam; i++){
-//				if(perm[i] == false && distancia[i] > maiorDist){
-//					maiorDist = distancia[i];
-//					k = i;
-//				}
-//			}
-//			System.out.println(k);
-//			vCorrente = k;
-//			perm[vCorrente] = MEMBRO;
-//		}
 		
 		while(vCorrente != vDestino) {
-			maiorDist = 1/INFINITO;
+			maiorDist = 0;
 			distCorrente = distancia[vCorrente];
 			for(i = 0; i < tam; i++) {
 				if(!perm[i]) {
 					if(listaDeAdjacencias.get(vCorrente).containsKey(i)) {
 						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
-						if( (1.0 / novaDist) < (1.0 / distancia[i])) {
+						if( (1.0 / novaDist) < (1 / distancia[i]) ) {
 							distancia[i] = novaDist;
 							caminho[i] = vCorrente;						
 						}
@@ -320,18 +295,11 @@ public class Grafo {
 					}
 				}
 			}
-			maiorDist = 1/INFINITO;
-			for(i = 0; i < tam; i++){
-				if(distancia[i] > maiorDist && perm[i] == false){
-					maiorDist = distancia[i];
-					k = i;
-				}
-			}
 			vCorrente = k;
 			perm[vCorrente] = MEMBRO;
 		}
 
-		imprimeMaiorCaminho(vOrigem, vDestino, caminho);
+		imprimeMaiorCaminho(vOrigem, vDestino, caminho, distancia[vDestino]);
 
 		return distancia[vDestino];
 	}
@@ -348,9 +316,9 @@ public class Grafo {
 		System.out.println(vertices.get(i).getNome());
 	}
 	
-	public void imprimeMaiorCaminho(int vOrigem, int vDestino, int caminho[]) {
-		System.out.println(MessageFormat.format("Maior caminho para chegar de {0} até {1}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome()));
-		System.out.print(vertices.get(vDestino).getNome() + " ");
+	public void imprimeMaiorCaminho(int vOrigem, int vDestino, int caminho[], double peso) {
+		System.out.println(MessageFormat.format("Maior caminho para chegar de {0} até {1} tem peso {2}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome(), peso));
+		System.out.print("Caminho percorrido: " + vertices.get(vDestino).getNome() + " ");
 		int i = caminho[vDestino];
 		while(i != vOrigem) {
 			if(i == -1)
