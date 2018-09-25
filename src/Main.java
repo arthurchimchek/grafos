@@ -38,5 +38,7 @@ public class Main {
 		g.maiorCaminho(0, 5);
 //		g.menorCaminho(0, 5);
 		
+		g.buscaProfundidade(0, 4);
+		g.buscaLargura(0, 4);
 	}
 }
