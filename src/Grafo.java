@@ -3,9 +3,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Grafo {
 	private static final boolean MEMBRO = true;
@@ -32,21 +34,21 @@ public class Grafo {
 			}
 		}
 	}
-	
+
 	public Grafo() {
 		tam = 0;
 		vertices = new ArrayList<>();
 		listaDeAdjacencias = new LinkedList<>();
 	}
 
-	public boolean seta_informacao(int i, String nome) {
+	public boolean setaInformacao(int i, String nome) {
 		if (vertices.size() > i && i >= 0) {
 			vertices.get(i).setNome(nome);
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean criaVertice(String nomeVertice) {
 		if(procuraVertice(nomeVertice) == -1) {
 			Vertice v = new Vertice();
@@ -59,11 +61,11 @@ public class Grafo {
 		}
 		return false;
 	}
-	
+
 	public int getNumeroDeVertices(){
 		return vertices.size();
 	}
-	
+
 	public int getNumeroDeArestas(){
 		int arestas = 0;
 		for(int i = 0; i < listaDeAdjacencias.size(); i++){
@@ -72,7 +74,7 @@ public class Grafo {
 		}
 		return arestas;
 	}
-	
+
 	public int procuraVertice(String nomeVertice){
 		for(int i = 0; i < vertices.size(); i++)
 		{
@@ -82,7 +84,7 @@ public class Grafo {
 		}
 		return -1;
 	}
-	
+
 	public boolean cria_adjacencia(int i, int j, double peso) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
 			listaDeAdjacencias.get(i).put(j, peso);
@@ -100,7 +102,7 @@ public class Grafo {
 				vertices.get(j).setGrauDeEntrada(grauDeEntradaAtual + 1);
 				vertices.get(i).setGrauDeSaida(grauDeSaidaAtual + 1);
 			}
-			
+
 			double peso = listaDeAdjacencias.get(i).get(j);
 			listaDeAdjacencias.get(i).put(j, peso + 1);
 			return true;
@@ -159,8 +161,8 @@ public class Grafo {
 		}
 		return fechamento;
 	}
-	
-	public void buscaProfundidade(int x, int y){
+
+	public void buscaProfundidade(int x, int y) {
 		List<Integer> visitados = new ArrayList<Integer>();
 		List<Integer> caminho = new ArrayList<Integer>();
 		boolean resultado = profundidade(x, y, visitados, caminho);
@@ -174,19 +176,19 @@ public class Grafo {
 			}
 		}
 	}
-	
-	public boolean profundidade(int origem, int destino, List<Integer> visitados, List<Integer> caminho){
+
+	public boolean profundidade(int origem, int destino, List<Integer> visitados, List<Integer> caminho) {
 		if(origem == destino){
 			caminho.add(caminho.size(), origem);
 			visitados.add(origem);
 			return true;
 		}
-		else{
-			if(!visitados.contains(origem)){
+		else {
+			if(!visitados.contains(origem)) {
 				caminho.add(caminho.size(), origem);
 				visitados.add(origem);
-				for(int key : listaDeAdjacencias.get(origem).keySet()){
-					if(profundidade(key, destino, visitados, caminho)){
+				for(int key : listaDeAdjacencias.get(origem).keySet()) {
+					if(profundidade(key, destino, visitados, caminho)) {
 						return true;
 					}
 				}
@@ -196,11 +198,11 @@ public class Grafo {
 	}
 
 	public double menorCaminho(int vOrigem, int vDestino) {
-		
+
 		boolean[][] alcancabilidade = this.fechamento();
 		if(alcancabilidade[vOrigem][vDestino] == false)
 			return -1.0;
-		
+
 		double distancia[] = new double[tam];
 		int caminho[] = new int[tam];
 		boolean perm[]  = new boolean[tam];
@@ -243,13 +245,13 @@ public class Grafo {
 
 		return distancia[vDestino];
 	}
-	
-public double maiorCaminho(int vOrigem, int vDestino) {
-		
+
+	public double maiorCaminho(int vOrigem, int vDestino) {
+
 		boolean[][] alcancabilidade = this.fechamento();
 		if(alcancabilidade[vOrigem][vDestino] == false)
 			return -1.0;
-		
+
 		double distancia[] = new double[tam];
 		int caminho[] = new int[tam];
 		boolean perm[]  = new boolean[tam];
@@ -305,7 +307,7 @@ public double maiorCaminho(int vOrigem, int vDestino) {
 		}
 		System.out.println(vertices.get(i).getNome());
 	}
-	
+
 	public void imprimeMaiorCaminho(int vOrigem, int vDestino, int caminho[]) {
 		System.out.println(MessageFormat.format("Menor caminho para chegar de {0} até {1}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome()));
 		System.out.print(vertices.get(vDestino).getNome() + " ");
@@ -340,7 +342,7 @@ public double maiorCaminho(int vOrigem, int vDestino) {
 			cont++;
 		}
 	}
-	
+
 	public void imprimir20ComMaiorGrauDeSaida() {
 		List<Vertice> copia = new ArrayList<>(vertices);
 
@@ -350,13 +352,13 @@ public double maiorCaminho(int vOrigem, int vDestino) {
 				return o2.getGrauDeSaida() - o1.getGrauDeSaida();
 			}
 		});
-		
+
 		System.out.println("20 com maior grau de saida:");
 		for (int i = 0; i < 20; i++) {
 			System.out.println(MessageFormat.format("{0}: {1}", copia.get(i).getNome(), copia.get(i).getGrauDeSaida()));
 		}
 	}
-	
+
 	public void imprimir20ComMaiorGrauDeEntrada() {
 		List<Vertice> copia = new ArrayList<>(vertices);
 
@@ -366,13 +368,13 @@ public double maiorCaminho(int vOrigem, int vDestino) {
 				return o2.getGrauDeEntrada() - o1.getGrauDeEntrada();
 			}
 		});
-		
+
 		System.out.println("20 com maior grau de entrada:");
 		for (int i = 0; i < 20; i++) {
 			System.out.println(MessageFormat.format("{0}: {1}", copia.get(i).getNome(), copia.get(i).getGrauDeEntrada()));
 		}
 	}
-	
+
 	public boolean largura(int destino, List<Integer> fila, List<Integer> visitados) {
 		if(fila.isEmpty()) {
 			return false;
@@ -392,7 +394,7 @@ public double maiorCaminho(int vOrigem, int vDestino) {
 			}
 		}
 	}
-	
+
 	public void buscaLargura(int origem, int destino) {
 		List<Integer> visitados = new ArrayList<>();
 		List<Integer> fila = new ArrayList<>();
@@ -407,5 +409,66 @@ public double maiorCaminho(int vOrigem, int vDestino) {
 		}
 		System.out.println();
 	}
-	 
+	
+	public void listarNosComDistanciaD(int origem, int distancia) {
+		Set<Integer> verticesAdj = listaDeAdjacencias.get(origem).keySet();
+		Set<Integer> verticesAdjAtuais = new HashSet<>(verticesAdj);
+		List<List<Integer>> listaDeArestasVisitadas = new ArrayList<>();
+		
+		for (int i = 0; i < tam; i++) {
+			listaDeArestasVisitadas.add(new ArrayList<>());
+		}
+		
+		for (Integer adj : verticesAdj) {
+			listaDeArestasVisitadas.get(origem).add(adj);
+		}
+		
+		for(int i = 0; i < distancia - 1; i++) {
+			verticesAdjAtuais = new HashSet<>();
+			for (int vAdj : verticesAdj) {
+				for (int v1 : listaDeAdjacencias.get(vAdj).keySet()) {
+					if (listaDeArestasVisitadas.get(vAdj).contains(v1) || v1 == origem) {
+						continue;
+					}
+					verticesAdjAtuais.add(v1);
+					listaDeArestasVisitadas.get(vAdj).add(v1);
+				}
+			}
+			verticesAdj = new HashSet<>(verticesAdjAtuais);
+		}
+		
+		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
+		for (int adj : verticesAdjAtuais) {
+			System.out.print(adj + " ");
+		}
+		System.out.println();
+	}
+
+	public void listarNosComDistanciaX(int origem, int distancia) {
+		boolean [][] m1  = m1();
+		boolean [][] produto  = m1();
+
+		for (int d = 0; d < distancia - 1; d++) {
+			for(int i = 0; i < tam; i++) {
+				for (int j = 0; j < tam; j++) {
+					boolean valor = false;
+					for (int k = 0; k < tam; k++) {
+						valor |= produto[i][k] && m1[k][j];
+						if(valor) {
+							break;
+						}
+					}
+					produto[i][j] = valor;
+				}
+			}
+		}
+		
+		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
+		for (int i = 0; i < tam; i++) {
+			if(produto[origem][i]) {
+				System.out.print(i + " ");
+			}
+		}
+		System.out.println();
+	}
 }

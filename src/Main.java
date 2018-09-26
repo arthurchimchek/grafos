@@ -21,29 +21,32 @@ public class Main {
 		g.criaVertice("V3");
 		g.criaVertice("V4");
 		g.criaVertice("V5");
-//		g.criaVertice("V6");
-//		g.criaVertice("V7");
-//		g.criaVertice("V8");
-//		g.criaVertice("V9");
-
+		g.criaVertice("V6");
+		g.criaVertice("V7");
+		
 		g.cria_adjacencia(0, 1, 1);
+		g.cria_adjacencia(0, 2, 1);
 		g.cria_adjacencia(0, 3, 1);
-		g.cria_adjacencia(1, 0, 2);
+		g.cria_adjacencia(0, 4, 1);
 		g.cria_adjacencia(1, 4, 1);
-		g.cria_adjacencia(1, 2, 3);
-		g.cria_adjacencia(1, 5, 7);
-		g.cria_adjacencia(2, 5, 2);
-		g.cria_adjacencia(2, 4, 1);
-		g.cria_adjacencia(3, 1, 3);
-		g.cria_adjacencia(4, 5, 2);
+		g.cria_adjacencia(2, 5, 1);
+		g.cria_adjacencia(5, 3, 1);
+		g.cria_adjacencia(5, 6, 1);
+		g.cria_adjacencia(5, 7, 1);
+		g.cria_adjacencia(3, 0, 1);
+		g.cria_adjacencia(7, 3, 1);
+		g.cria_adjacencia(3, 2, 1);
 		g.imprimir();
 		
-		g.maiorCaminho(0, 5);
-		g.menorCaminho(0, 5);
+//		g.maiorCaminho(0, 5);
+//		g.menorCaminho(0, 5);
 		
-		List<Integer> list = new ArrayList<Integer>();
+//		List<Integer> list = new ArrayList<Integer>();
 		
-		g.buscaProfundidade(0, 4);
-		g.buscaLargura(0, 4);
+//		g.buscaProfundidade(0, 4);
+//		g.buscaLargura(0, 4);
+		
+		g.listarNosComDistanciaD(0, 3);
+//		g.listarNosComDistanciaX(0, 2);
 	}
 }
