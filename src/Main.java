@@ -6,7 +6,8 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 //		LeitorArquivos leitor = new LeitorArquivos();
-//		Grafo g = leitor.readDirectory();
+//		Grafo g = new Grafo();
+//		g = leitor.readDirectory();
 //		System.out.println("Numero total de vértices: " + g.getNumeroDeVertices());
 //		g.imprimir();
 //		System.out.println();
@@ -23,7 +24,7 @@ public class Main {
 		g.criaVertice("V5");
 		g.criaVertice("V6");
 		g.criaVertice("V7");
-		
+
 		g.cria_adjacencia(0, 1, 1);
 		g.cria_adjacencia(0, 2, 1);
 		g.cria_adjacencia(0, 3, 1);
@@ -45,6 +46,16 @@ public class Main {
 		
 //		g.buscaProfundidade(0, 4);
 //		g.buscaLargura(0, 4);
+
+		g.cria_adjacencia(1, 2, 3);
+		g.cria_adjacencia(2, 5, 2);
+		g.cria_adjacencia(2, 4, 1);
+		g.cria_adjacencia(3, 1, 3);
+		g.cria_adjacencia(4, 5, 2);
+		g.imprimir();
+		
+		g.maiorCaminho(0, 5);
+//		g.menorCaminho(0, 5);
 		
 		g.listarNosComDistanciaD(0, 3);
 //		g.listarNosComDistanciaX(0, 2);
