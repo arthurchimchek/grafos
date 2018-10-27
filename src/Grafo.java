@@ -181,7 +181,7 @@ public class Grafo {
 	}
 
 	public boolean profundidade(int origem, int destino, List<Integer> visitados, List<Integer> caminho) {
-		if(origem == destino){
+		if(origem == destino) {
 			caminho.add(caminho.size(), origem);
 			visitados.add(origem);
 			return true;
@@ -259,7 +259,6 @@ public class Grafo {
 		if(alcancabilidade[vOrigem][vDestino] == false){
 			System.out.println("A origem não consegue alcançar o destino");
 			return -1.0;
-
 		}
 		
 		double distancia[] = new double[tam];
@@ -279,22 +278,24 @@ public class Grafo {
 		distancia[vOrigem] = 0;
 		vCorrente = vOrigem;
 		
-		while(vCorrente != vDestino) {
-			maiorDist = 0;
-			distCorrente = distancia[vCorrente];
-			for(i = 0; i < tam; i++) {
-				if(!perm[i]) {
-					if(listaDeAdjacencias.get(vCorrente).containsKey(i)) {
+		while(vCorrente != vDestino){
+			if(listaDeAdjacencias.get(vCorrente) != null){
+				distCorrente = distancia[vCorrente];
+				for(i =0; i < tam; i++){
+					if(listaDeAdjacencias.get(vCorrente).containsKey(i)){
 						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
-						if( (1.0 / novaDist) < (1 / distancia[i]) ) {
+						if( (1.0 / novaDist) < (1.0 / distancia[i])) {
 							distancia[i] = novaDist;
 							caminho[i] = vCorrente;						
 						}
-						if(distancia[i] > distCorrente){
-							maiorDist = distancia[i];
-							k = i;
-						}
 					}
+				}
+			}
+			maiorDist = 1 / INFINITO;
+			for(i =0; i < tam; i++){
+				if(perm[i] == false && distancia[i] > maiorDist){
+					maiorDist = distancia[i];
+					k = i;
 				}
 			}
 			vCorrente = k;
@@ -455,31 +456,149 @@ public class Grafo {
 		System.out.println();
 	}
 
-	public void listarNosComDistanciaX(int origem, int distancia) {
-		boolean [][] m1  = m1();
-		boolean [][] produto  = m1();
-
-		for (int d = 0; d < distancia - 1; d++) {
-			for(int i = 0; i < tam; i++) {
-				for (int j = 0; j < tam; j++) {
-					boolean valor = false;
-					for (int k = 0; k < tam; k++) {
-						valor |= produto[i][k] && m1[k][j];
-						if(valor) {
-							break;
-						}
+//	public void listarNosComDistanciaX(int origem, int distancia) {
+//		boolean [][] m1  = m1();
+//		boolean [][] produto  = m1();
+//
+//		for (int d = 0; d < distancia - 1; d++) {
+//			for(int i = 0; i < tam; i++) {
+//				for (int j = 0; j < tam; j++) {
+//					boolean valor = false;
+//					for (int k = 0; k < tam; k++) {
+//						valor = produto[i][k] && m1[k][j];
+//						if(valor) {
+//							break;
+//						}
+//					}
+//					produto[i][j] = valor;
+//				}
+//			}
+//		}
+//		
+//		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
+//		for (int i = 0; i < tam; i++) {
+//			if(produto[origem][i]) {
+//				System.out.print(i + " ");
+//			}
+//		}
+//		System.out.println();
+//	}
+	
+	public boolean ehCiclico() {
+		List<Integer> fila = new ArrayList<>();
+		fila.add(vertices.get(0).getId());
+		
+		List<Integer> visitados = new ArrayList<>();
+		List<Integer> nosComAdjacencia = new ArrayList<>();
+		
+		return ciclico(fila, visitados, nosComAdjacencia);
+	}
+	
+	public boolean ciclico(/*int destino,*/ List<Integer> fila, List<Integer> visitados, List<Integer> nosComAdjacencia) {
+		if(fila.isEmpty()) {
+			return false;
+		} else {
+			int x = fila.remove(0);
+			visitados.add(x);
+//			if(x == destino) {
+//				return true;
+//			} else {
+				Map<Integer, Double> adjacentesDeX = listaDeAdjacencias.get(x);
+				for(int i : adjacentesDeX.keySet()) {
+					if(!visitados.contains(i) && !fila.contains(i)) {
+						fila.add(i);
+						if(!nosComAdjacencia.contains(i) && listaDeAdjacencias.get(i).size() > 0)
+							nosComAdjacencia.add(i);
 					}
-					produto[i][j] = valor;
+					else if(visitados.contains(i) && nosComAdjacencia.contains(i)){
+						return true;
+					}
+				}
+				return ciclico(/*destino,*/ fila, visitados, nosComAdjacencia);
+//			}
+		}
+	}
+	
+	public List<Aresta> prim() {
+		List<Aresta> arestas = new ArrayList<Aresta>();
+		List<Aresta> todasArestas = new ArrayList<>();
+		List<Integer> permitidos = new ArrayList<Integer>();
+		
+		int v = vertices.get(0).getId();
+		permitidos.add(v);
+		
+		while(permitidos.size() != vertices.size()) {
+			Map<Integer, Double> adjacenciasAtuais = listaDeAdjacencias.get(v); 
+			for(int k : adjacenciasAtuais.keySet()) {
+				todasArestas.add(new Aresta(v, k, adjacenciasAtuais.get(k)));
+			}
+			
+			for(int i = 0; i < listaDeAdjacencias.size(); i++) {
+				if(i == v)
+					continue;
+				Map<Integer, Double> adjacencias = listaDeAdjacencias.get(i);
+				for(int k : adjacencias.keySet()) {
+					if(k == v)
+						todasArestas.add(new Aresta(i, v, adjacencias.get(k)));
 				}
 			}
+			
+			Aresta a = null;
+			for(Aresta temp : todasArestas) {
+				if(a != null) {
+					if(temp.getPeso() < a.getPeso()) {
+						if(!permitidos.contains(temp.getDestino()) || !permitidos.contains(temp.getOrigem())) {
+							a = temp;
+						}
+					}
+				} else {
+					a = temp;
+				}	
+			}
+			System.out.println(v);
+			v = a.getDestino();
+			permitidos.add(v);
+			arestas.add(a);
+			todasArestas.remove(a);
 		}
 		
-		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
-		for (int i = 0; i < tam; i++) {
-			if(produto[origem][i]) {
-				System.out.print(i + " ");
-			}
-		}
-		System.out.println();
+		return arestas;
 	}
+	
+	public List<List<Integer>> componentes(int origem, List<Integer> visitados, List<Integer> caminho) {
+		List<List<Integer>> componentes = new ArrayList<>();
+		List<Integer> componente = new ArrayList<>();
+		
+		while(caminho.size() <= vertices.size())
+		{
+			if(!visitados.contains(origem)) {
+				caminho.add(caminho.size(), origem);
+				visitados.add(origem);
+				for(int key : listaDeAdjacencias.get(origem).keySet()) {
+//					if(profundidade(key, destino, visitados, caminho)) {
+//						return true;
+//					}
+				}
+			}
+			caminho.add(caminho.size(), origem);
+			
+		}
+		
+		return componentes;
+		
+	}
+	
+	public void profundidade2(int origem, List<Integer> visitados) {
+		visitados.add(origem);
+		
+		for(int key : listaDeAdjacencias.get(origem).keySet()) {
+			
+			
+			
+			
+			if(!visitados.contains(key))
+				profundidade2(key, visitados);
+		}
+	}
+	
 }
