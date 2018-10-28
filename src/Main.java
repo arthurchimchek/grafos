@@ -13,21 +13,36 @@ public class Main {
 		g.criaVertice("V3");
 		g.criaVertice("V4");
 		g.criaVertice("V5");
+		g.criaVertice("V6");
 
-		g.cria_adjacencia(0, 1, 3);
-		g.cria_adjacencia(0, 3, 4);
-		g.cria_adjacencia(0, 5, 10);
-		g.cria_adjacencia(0, 2, 8);
-		g.cria_adjacencia(1, 3, 6);
-		g.cria_adjacencia(2, 4, 7);
+//		g.cria_adjacencia(0, 1, 3);
+//		g.cria_adjacencia(0, 3, 4);
+//		g.cria_adjacencia(0, 5, 10);
+//		g.cria_adjacencia(0, 2, 8);
+//		g.cria_adjacencia(1, 3, 6);
+//		g.cria_adjacencia(2, 4, 7);
+//		g.cria_adjacencia(3, 4, 1);
+//		g.cria_adjacencia(3, 5, 3);
+//		g.cria_adjacencia(4, 5, 1);
+		g.cria_adjacencia(0, 1, 1);
+		g.cria_adjacencia(1, 2, 1);
+		g.cria_adjacencia(2, 1, 1);
 		g.cria_adjacencia(3, 4, 1);
-		g.cria_adjacencia(3, 5, 3);
+		g.cria_adjacencia(3, 6, 1);
 		g.cria_adjacencia(4, 5, 1);
+		g.cria_adjacencia(5, 6, 1);
+		g.cria_adjacencia(6, 4, 1);
 		g.imprimir();
 		
-		List<Aresta> arestas = g.prim();
-		for(Aresta a : arestas){
-			System.out.println("Origem: " + a.getOrigem() + "\tDestino: " + a.getDestino() + "\tPeso: " + a.getPeso());
+		List<List<Integer>> a = g.componentes();
+		System.out.println(a.size());
+		int j = 1;
+		for(List<Integer> i : a){
+			System.out.print("Componente " + j + ": ");
+			for(int k : i)
+				System.out.print(k + " ");
+			System.out.println();
+			j++;
 		}
 	}
 }

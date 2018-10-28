@@ -565,23 +565,26 @@ public class Grafo {
 		return arestas;
 	}
 	
-	public List<List<Integer>> componentes(int origem, List<Integer> visitados, List<Integer> caminho) {
+	public List<List<Integer>> componentes() {
 		List<List<Integer>> componentes = new ArrayList<>();
-		List<Integer> componente = new ArrayList<>();
-		
-		while(caminho.size() <= vertices.size())
+		List<Integer> visitados = new ArrayList<>();
+		int i = 0;
+		int origem = 0;
+		while(i < vertices.size())
 		{
+			origem = vertices.get(i).getId();
 			if(!visitados.contains(origem)) {
-				caminho.add(caminho.size(), origem);
 				visitados.add(origem);
-				for(int key : listaDeAdjacencias.get(origem).keySet()) {
-//					if(profundidade(key, destino, visitados, caminho)) {
-//						return true;
-//					}
+				List<Integer> temp = new ArrayList<>();
+				profundidade2(origem, temp);
+				componentes.add(temp);
+				for(int k : temp)
+				{
+					if(!visitados.contains(k))
+						visitados.add(k);
 				}
 			}
-			caminho.add(caminho.size(), origem);
-			
+			i++;
 		}
 		
 		return componentes;
@@ -589,15 +592,23 @@ public class Grafo {
 	}
 	
 	public void profundidade2(int origem, List<Integer> visitados) {
-		visitados.add(origem);
-		
+		visitados.add(origem);		
 		for(int key : listaDeAdjacencias.get(origem).keySet()) {
-			
-			
-			
-			
 			if(!visitados.contains(key))
 				profundidade2(key, visitados);
+		}
+	}
+	
+	public void buscaProfundidade2(int x){
+		if(vertices.size() == 0){
+			System.out.println("Não existem vértices no grafo");
+			return;
+		}
+		List<Integer> visitados = new ArrayList<Integer>();
+		profundidade2(x, visitados);
+		System.out.print("Vértices fortemente conectados: ");
+		for(int i : visitados){
+			System.out.print(i + " ");
 		}
 	}
 	
