@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 public class Grafo {
 	private static final boolean MEMBRO = true;
@@ -612,9 +613,9 @@ public class Grafo {
 		}
 	}
 	
-	public boolean clique(List<Integer> vertices) {
-		for(int vertice : vertices) {
-			for(int adjacente : vertices){
+	public boolean clique(List<Integer> verticesClique) {
+		for(int vertice : verticesClique) {
+			for(int adjacente : verticesClique){
 				if(adjacente == vertice)
 					continue;
 				if(!listaDeAdjacencias.get(vertice).keySet().contains(adjacente))
@@ -625,6 +626,16 @@ public class Grafo {
 		return true;
 	}
 	
-	
+	public boolean maximal(List<Integer> verticesClique) {
+		for(Vertice vertice : vertices) {
+			if(!verticesClique.contains(vertice.getId())) {
+				List<Integer> tmp = verticesClique;
+				tmp.add(vertice.getId());
+				if(clique(tmp))
+					return false;
+			}
+		}
+		return true;
+	}
 	
 }
