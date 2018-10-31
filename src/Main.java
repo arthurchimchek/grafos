@@ -44,5 +44,11 @@ public class Main {
 			System.out.println();
 			j++;
 		}
+		
+		List<Integer> lista = new ArrayList<>();
+		lista.add(0);
+		lista.add(1);
+		lista.add(2);
+		System.out.println(g.clique(lista));
 	}
 }

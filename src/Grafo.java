@@ -612,4 +612,19 @@ public class Grafo {
 		}
 	}
 	
+	public boolean clique(List<Integer> vertices) {
+		for(int vertice : vertices) {
+			for(int adjacente : vertices){
+				if(adjacente == vertice)
+					continue;
+				if(!listaDeAdjacencias.get(vertice).keySet().contains(adjacente))
+					return false;
+			}
+				
+		}
+		return true;
+	}
+	
+	
+	
 }
