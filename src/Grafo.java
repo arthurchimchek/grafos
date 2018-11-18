@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 public class Grafo {
 	private static final boolean MEMBRO = true;
@@ -18,10 +17,24 @@ public class Grafo {
 	private int tam;
 	private LinkedList<Map<Integer, Double>> listaDeAdjacencias;
 	private List<Vertice> vertices;
+	boolean direcionado;
 
-	public Grafo(int n) {
+	public List<Vertice> getVertices() {
+		return vertices;
+	}
+	
+	public boolean isDirecionado() {
+		return direcionado;
+	}
+
+	public LinkedList<Map<Integer, Double>> getListaDeAdjacencias() {
+		return listaDeAdjacencias;
+	}
+
+	public Grafo(int n, boolean isDirecionado) {
 		tam = n;
 		vertices = new ArrayList<>();
+		direcionado = isDirecionado;
 		listaDeAdjacencias = new LinkedList<>();
 
 		for(int i = 0; i < n; i++) {
@@ -39,6 +52,14 @@ public class Grafo {
 		tam = 0;
 		vertices = new ArrayList<>();
 		listaDeAdjacencias = new LinkedList<>();
+		direcionado = false;
+	}
+	
+	public Grafo(boolean isDirecionado) {
+		tam = 0;
+		vertices = new ArrayList<>();
+		listaDeAdjacencias = new LinkedList<>();
+		direcionado = isDirecionado;
 	}
 
 	public boolean setaInformacao(int i, String nome) {
@@ -53,6 +74,19 @@ public class Grafo {
 		if(procuraVertice(nomeVertice) == -1) {
 			Vertice v = new Vertice();
 			v.setId(vertices.size());
+			v.setNome(nomeVertice);
+			vertices.add(v);
+			tam++;
+			listaDeAdjacencias.add(new HashMap<>());
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean criaVertice(int id, String nomeVertice){
+		if(procuraVertice(nomeVertice) == -1) {
+			Vertice v = new Vertice();
+			v.setId(id);
 			v.setNome(nomeVertice);
 			vertices.add(v);
 			tam++;
@@ -88,6 +122,19 @@ public class Grafo {
 	public boolean cria_adjacencia(int i, int j, double peso) {
 		if(i < tam && j < tam && i >= 0 && j >= 0 && peso > 0) {
 			listaDeAdjacencias.get(i).put(j, peso);
+			int grauDeEntradaAtual = vertices.get(j).getGrauDeEntrada();
+			int grauDeSaidaAtual = vertices.get(i).getGrauDeSaida();
+			vertices.get(j).setGrauDeEntrada(grauDeEntradaAtual + 1);
+			vertices.get(i).setGrauDeSaida(grauDeSaidaAtual + 1);
+			
+			if(!this.direcionado){
+				grauDeEntradaAtual = vertices.get(i).getGrauDeEntrada();
+				grauDeSaidaAtual = vertices.get(j).getGrauDeSaida();
+				vertices.get(i).setGrauDeEntrada(grauDeEntradaAtual + 1);
+				vertices.get(j).setGrauDeSaida(grauDeSaidaAtual + 1);
+				listaDeAdjacencias.get(j).put(i, peso);
+			}
+			
 			return true;
 		}
 		return false;
@@ -246,6 +293,52 @@ public class Grafo {
 		}
 
 		imprimeCaminho(vOrigem, vDestino, caminho);
+
+		return distancia[vDestino];
+	}
+	
+	public double menorCaminho(int vOrigem, int vDestino, int caminho[]) {
+
+		boolean[][] alcancabilidade = this.fechamento();
+		if(alcancabilidade[vOrigem][vDestino] == false)
+			return -1.0;
+
+		double distancia[] = new double[tam];
+		boolean perm[]  = new boolean[tam];
+		int vCorrente, i, k=vOrigem;
+		double menorDist, novaDist, distCorrente;
+
+		//inicialização
+		for(i=0; i < tam; ++i) {
+			perm[i] = NAOMEMBRO;
+			distancia[i] = INFINITO;
+			caminho[i] = -1;
+		}
+
+		perm[vOrigem] = MEMBRO;
+		distancia[vOrigem] = 0;
+		vCorrente = vOrigem;
+		while(vCorrente != vDestino) {
+			menorDist = INFINITO;
+			distCorrente = distancia[vCorrente];
+			for(i = 0; i < tam; i++) {
+				if(!perm[i]) {
+					if(listaDeAdjacencias.get(vCorrente).containsKey(i)) {
+						novaDist = distCorrente + listaDeAdjacencias.get(vCorrente).get(i);
+						if(novaDist < distancia[i]) {
+							distancia[i] = novaDist;
+							caminho[i] = vCorrente;						
+						}
+						if(distancia[i] < menorDist) {
+							menorDist = distancia[i];
+							k = i;
+						}
+					}
+				}
+			}
+			vCorrente = k;
+			perm[vCorrente] = MEMBRO;
+		}
 
 		return distancia[vDestino];
 	}
@@ -638,4 +731,53 @@ public class Grafo {
 		return true;
 	}
 	
+	public double centralidade(int x){
+		int sum = 0;
+		Map<Integer, Double> adjacencias = listaDeAdjacencias.get(x);
+		for(Vertice v : vertices)
+		{
+			int id = v.getId();
+			if(adjacencias.containsKey(id))
+				sum++;
+		}
+		return (sum / vertices.size() - 1);
+	}
+	
+	public List<Double> centralidadeTodos(){
+		List<Double> grauCentralidadeTodos = new ArrayList<>();
+		
+		for(Vertice v : vertices)
+			grauCentralidadeTodos.add(centralidade(v.getId()));
+		
+		return grauCentralidadeTodos;
+	}
+	
+	public double intermediacao(int x){
+		int gx = 0;
+		for(Vertice v : vertices){
+			if(x != v.getId()){
+				int caminho[] = new int[tam];
+				menorCaminho(x, v.getId(), caminho);
+				for(int i = 0; i < tam; i++){
+					if(x == caminho[i]){
+						gx++;
+						break;
+					}
+				}
+			}
+		}
+		if(direcionado)
+			return gx / ((vertices.size() - 1) * (vertices.size() - 2));
+		
+		return (gx / ((vertices.size() - 1) * (vertices.size() - 2))) *2;
+	}
+	
+	public List<Double> intermediacaoTodos(){
+		List<Double> grauIntermediacaoTodos = new ArrayList<>();
+		
+		for(Vertice v : vertices)
+			grauIntermediacaoTodos.add(intermediacao(v.getId()));
+		
+		return grauIntermediacaoTodos;
+	}
 }
