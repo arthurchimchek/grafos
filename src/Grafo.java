@@ -27,6 +27,10 @@ public class Grafo {
 		return direcionado;
 	}
 
+	public void setDirecionado(boolean direcionado) {
+		this.direcionado = direcionado;
+	}
+
 	public LinkedList<Map<Integer, Double>> getListaDeAdjacencias() {
 		return listaDeAdjacencias;
 	}
@@ -759,7 +763,7 @@ public class Grafo {
 				int caminho[] = new int[tam];
 				menorCaminho(x, v.getId(), caminho);
 				for(int i = 0; i < tam; i++){
-					if(x == caminho[i]){
+					if(x == caminho[i] && i != 0 && i != tam -1){
 						gx++;
 						break;
 					}

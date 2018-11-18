@@ -15,7 +15,6 @@ public class PajekFile {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		
 		String line = br.readLine();
-		boolean direcionado = false;
 		while(line != null) {
 			if(line.contains("*Vertices")) {
 				String tmp = line;
@@ -29,17 +28,14 @@ public class PajekFile {
 				}
 			}
 			else if(line.contains("*Arcs")){
-				direcionado = true;
+				grafo.setDirecionado(true);
 			}
 			else if(line.contains("*Edges")){
-				direcionado = false;
+				grafo.setDirecionado(false);
 			}
 			else {
 				String partesAresta[] = line.split(" ");
 				grafo.cria_adjacencia(Integer.parseInt(partesAresta[0]), Integer.parseInt(partesAresta[1]), Integer.parseInt(partesAresta[2]));
-				if(!direcionado){
-					grafo.cria_adjacencia(Integer.parseInt(partesAresta[1]), Integer.parseInt(partesAresta[0]), Integer.parseInt(partesAresta[2]));
-				}
 			}
 			line = br.readLine();
 		}
