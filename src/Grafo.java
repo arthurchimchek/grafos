@@ -22,7 +22,7 @@ public class Grafo {
 	public List<Vertice> getVertices() {
 		return vertices;
 	}
-	
+
 	public boolean isDirecionado() {
 		return direcionado;
 	}
@@ -58,7 +58,7 @@ public class Grafo {
 		listaDeAdjacencias = new LinkedList<>();
 		direcionado = false;
 	}
-	
+
 	public Grafo(boolean isDirecionado) {
 		tam = 0;
 		vertices = new ArrayList<>();
@@ -86,7 +86,7 @@ public class Grafo {
 		}
 		return false;
 	}
-	
+
 	public boolean criaVertice(int id, String nomeVertice){
 		if(procuraVertice(nomeVertice) == -1) {
 			Vertice v = new Vertice();
@@ -130,7 +130,7 @@ public class Grafo {
 			int grauDeSaidaAtual = vertices.get(i).getGrauDeSaida();
 			vertices.get(j).setGrauDeEntrada(grauDeEntradaAtual + 1);
 			vertices.get(i).setGrauDeSaida(grauDeSaidaAtual + 1);
-			
+
 			if(!this.direcionado){
 				grauDeEntradaAtual = vertices.get(i).getGrauDeEntrada();
 				grauDeSaidaAtual = vertices.get(j).getGrauDeSaida();
@@ -138,7 +138,7 @@ public class Grafo {
 				vertices.get(j).setGrauDeSaida(grauDeSaidaAtual + 1);
 				listaDeAdjacencias.get(j).put(i, peso);
 			}
-			
+
 			return true;
 		}
 		return false;
@@ -212,7 +212,7 @@ public class Grafo {
 		}
 		return fechamento;
 	}
-	
+
 	public void buscaProfundidade(int x, int y){
 		if(vertices.size() == 0){
 			System.out.println("Não existem vértices no grafo");
@@ -300,7 +300,7 @@ public class Grafo {
 
 		return distancia[vDestino];
 	}
-	
+
 	public double menorCaminho(int vOrigem, int vDestino, int caminho[]) {
 
 		boolean[][] alcancabilidade = this.fechamento();
@@ -346,19 +346,19 @@ public class Grafo {
 
 		return distancia[vDestino];
 	}
-	
+
 	public double maiorCaminho(int vOrigem, int vDestino) {
 		if(vertices.size() == 0){
 			System.out.println("Não existem vértices no grafo");
 			return -1.0;
 		}
-	
+
 		boolean[][] alcancabilidade = this.fechamento();
 		if(alcancabilidade[vOrigem][vDestino] == false){
 			System.out.println("A origem não consegue alcançar o destino");
 			return -1.0;
 		}
-		
+
 		double distancia[] = new double[tam];
 		int caminho[] = new int[tam];
 		boolean perm[]  = new boolean[tam];
@@ -375,7 +375,7 @@ public class Grafo {
 		perm[vOrigem] = MEMBRO;
 		distancia[vOrigem] = 0;
 		vCorrente = vOrigem;
-		
+
 		while(vCorrente != vDestino){
 			if(listaDeAdjacencias.get(vCorrente) != null){
 				distCorrente = distancia[vCorrente];
@@ -404,7 +404,7 @@ public class Grafo {
 
 		return distancia[vDestino];
 	}
-	
+
 
 	public void imprimeCaminho(int vOrigem, int vDestino, int caminho[]) {
 		System.out.println(MessageFormat.format("Menor caminho para chegar de {0} até {1}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome()));
@@ -416,7 +416,7 @@ public class Grafo {
 		}
 		System.out.println(vertices.get(i).getNome());
 	}
-	
+
 	public void imprimeMaiorCaminho(int vOrigem, int vDestino, int caminho[], double peso) {
 		System.out.println(MessageFormat.format("Maior caminho para chegar de {0} até {1} tem peso {2}:", vertices.get(vOrigem).getNome(), vertices.get(vDestino).getNome(), peso));
 		System.out.print("Caminho percorrido: " + vertices.get(vDestino).getNome() + " ");
@@ -519,20 +519,20 @@ public class Grafo {
 		}
 		System.out.println();
 	}
-	
+
 	public void listarNosComDistanciaD(int origem, int distancia) {
 		Set<Integer> verticesAdj = listaDeAdjacencias.get(origem).keySet();
 		Set<Integer> verticesAdjAtuais = new HashSet<>(verticesAdj);
 		List<List<Integer>> listaDeArestasVisitadas = new ArrayList<>();
-		
+
 		for (int i = 0; i < tam; i++) {
 			listaDeArestasVisitadas.add(new ArrayList<>());
 		}
-		
+
 		for (Integer adj : verticesAdj) {
 			listaDeArestasVisitadas.get(origem).add(adj);
 		}
-		
+
 		for(int i = 0; i < distancia - 1; i++) {
 			verticesAdjAtuais = new HashSet<>();
 			for (int vAdj : verticesAdj) {
@@ -546,7 +546,7 @@ public class Grafo {
 			}
 			verticesAdj = new HashSet<>(verticesAdjAtuais);
 		}
-		
+
 		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
 		for (int adj : verticesAdjAtuais) {
 			System.out.print(adj + " ");
@@ -554,83 +554,82 @@ public class Grafo {
 		System.out.println();
 	}
 
-//	public void listarNosComDistanciaX(int origem, int distancia) {
-//		boolean [][] m1  = m1();
-//		boolean [][] produto  = m1();
-//
-//		for (int d = 0; d < distancia - 1; d++) {
-//			for(int i = 0; i < tam; i++) {
-//				for (int j = 0; j < tam; j++) {
-//					boolean valor = false;
-//					for (int k = 0; k < tam; k++) {
-//						valor = produto[i][k] && m1[k][j];
-//						if(valor) {
-//							break;
-//						}
-//					}
-//					produto[i][j] = valor;
-//				}
-//			}
-//		}
-//		
-//		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
-//		for (int i = 0; i < tam; i++) {
-//			if(produto[origem][i]) {
-//				System.out.print(i + " ");
-//			}
-//		}
-//		System.out.println();
-//	}
-	
+	//	public void listarNosComDistanciaX(int origem, int distancia) {
+	//		boolean [][] m1  = m1();
+	//		boolean [][] produto  = m1();
+	//
+	//		for (int d = 0; d < distancia - 1; d++) {
+	//			for(int i = 0; i < tam; i++) {
+	//				for (int j = 0; j < tam; j++) {
+	//					boolean valor = false;
+	//					for (int k = 0; k < tam; k++) {
+	//						valor = produto[i][k] && m1[k][j];
+	//						if(valor) {
+	//							break;
+	//						}
+	//					}
+	//					produto[i][j] = valor;
+	//				}
+	//			}
+	//		}
+	//		
+	//		System.out.println(MessageFormat.format("Nós com distancia {0} da origem {1}: ",distancia, origem));
+	//		for (int i = 0; i < tam; i++) {
+	//			if(produto[origem][i]) {
+	//				System.out.print(i + " ");
+	//			}
+	//		}
+	//		System.out.println();
+	//	}
+
 	public boolean ehCiclico() {
 		List<Integer> fila = new ArrayList<>();
 		fila.add(vertices.get(0).getId());
-		
+
 		List<Integer> visitados = new ArrayList<>();
 		List<Integer> nosComAdjacencia = new ArrayList<>();
-		
+
 		return ciclico(fila, visitados, nosComAdjacencia);
 	}
-	
-	public boolean ciclico(/*int destino,*/ List<Integer> fila, List<Integer> visitados, List<Integer> nosComAdjacencia) {
+
+	public boolean ciclico(List<Integer> fila, List<Integer> visitados, List<Integer> nosComAdjacencia) {
 		if(fila.isEmpty()) {
 			return false;
 		} else {
 			int x = fila.remove(0);
 			visitados.add(x);
-//			if(x == destino) {
-//				return true;
-//			} else {
-				Map<Integer, Double> adjacentesDeX = listaDeAdjacencias.get(x);
-				for(int i : adjacentesDeX.keySet()) {
-					if(!visitados.contains(i) && !fila.contains(i)) {
-						fila.add(i);
-						if(!nosComAdjacencia.contains(i) && listaDeAdjacencias.get(i).size() > 0)
-							nosComAdjacencia.add(i);
-					}
-					else if(visitados.contains(i) && nosComAdjacencia.contains(i)){
-						return true;
-					}
+			Map<Integer, Double> adjacentesDeX = listaDeAdjacencias.get(x);
+			if(nosComAdjacencia.size() <= 0 && adjacentesDeX.keySet().size() > 0)
+				nosComAdjacencia.add(x);
+			for(int i : adjacentesDeX.keySet()) {
+				if(!visitados.contains(i) && !fila.contains(i)) {
+					fila.add(i);
+					if(!nosComAdjacencia.contains(i) && listaDeAdjacencias.get(i).size() > 0)
+						nosComAdjacencia.add(i);
 				}
-				return ciclico(/*destino,*/ fila, visitados, nosComAdjacencia);
-//			}
+				else if(visitados.contains(i) && nosComAdjacencia.contains(i)){
+					return true;
+				}
+			}
+			return ciclico(fila, visitados, nosComAdjacencia);
+			//			}
 		}
 	}
-	
+
 	public List<Aresta> prim() {
 		List<Aresta> arestas = new ArrayList<Aresta>();
 		List<Aresta> todasArestas = new ArrayList<>();
 		List<Integer> permitidos = new ArrayList<Integer>();
-		
+
 		int v = vertices.get(0).getId();
 		permitidos.add(v);
-		
+
 		while(permitidos.size() != vertices.size()) {
 			Map<Integer, Double> adjacenciasAtuais = listaDeAdjacencias.get(v); 
 			for(int k : adjacenciasAtuais.keySet()) {
 				todasArestas.add(new Aresta(v, k, adjacenciasAtuais.get(k)));
 			}
-			
+
 			for(int i = 0; i < listaDeAdjacencias.size(); i++) {
 				if(i == v)
 					continue;
@@ -640,7 +639,7 @@ public class Grafo {
 						todasArestas.add(new Aresta(i, v, adjacencias.get(k)));
 				}
 			}
-			
+
 			Aresta a = null;
 			for(Aresta temp : todasArestas) {
 				if(a != null) {
@@ -659,10 +658,10 @@ public class Grafo {
 			arestas.add(a);
 			todasArestas.remove(a);
 		}
-		
+
 		return arestas;
 	}
-	
+
 	public List<List<Integer>> componentes() {
 		List<List<Integer>> componentes = new ArrayList<>();
 		List<Integer> visitados = new ArrayList<>();
@@ -684,11 +683,10 @@ public class Grafo {
 			}
 			i++;
 		}
-		
+
 		return componentes;
-		
 	}
-	
+
 	public void profundidade2(int origem, List<Integer> visitados) {
 		visitados.add(origem);		
 		for(int key : listaDeAdjacencias.get(origem).keySet()) {
@@ -696,7 +694,7 @@ public class Grafo {
 				profundidade2(key, visitados);
 		}
 	}
-	
+
 	public void buscaProfundidade2(int x){
 		if(vertices.size() == 0){
 			System.out.println("Não existem vértices no grafo");
@@ -709,7 +707,7 @@ public class Grafo {
 			System.out.print(i + " ");
 		}
 	}
-	
+
 	public boolean clique(List<Integer> verticesClique) {
 		for(int vertice : verticesClique) {
 			for(int adjacente : verticesClique){
@@ -718,11 +716,11 @@ public class Grafo {
 				if(!listaDeAdjacencias.get(vertice).keySet().contains(adjacente))
 					return false;
 			}
-				
+
 		}
 		return true;
 	}
-	
+
 	public boolean maximal(List<Integer> verticesClique) {
 		for(Vertice vertice : vertices) {
 			if(!verticesClique.contains(vertice.getId())) {
@@ -734,8 +732,8 @@ public class Grafo {
 		}
 		return true;
 	}
-	
-	public double centralidade(int x){
+
+	public float centralidade(int x) {
 		int sum = 0;
 		Map<Integer, Double> adjacencias = listaDeAdjacencias.get(x);
 		for(Vertice v : vertices)
@@ -744,25 +742,27 @@ public class Grafo {
 			if(adjacencias.containsKey(id))
 				sum++;
 		}
-		return (sum / vertices.size() - 1);
+
+		float teste = (float)sum / (vertices.size() - 1);
+		return teste;
 	}
-	
-	public List<Double> centralidadeTodos(){
-		List<Double> grauCentralidadeTodos = new ArrayList<>();
-		
+
+	public List<Float> centralidadeTodos() {
+		List<Float> grauCentralidadeTodos = new ArrayList<>();
+
 		for(Vertice v : vertices)
 			grauCentralidadeTodos.add(centralidade(v.getId()));
-		
+
 		return grauCentralidadeTodos;
 	}
-	
-	public double intermediacao(int x){
+
+	public double intermediacao(int x) {
 		int gx = 0;
-		for(Vertice v : vertices){
+		for(Vertice v : vertices) {
 			if(x != v.getId()){
 				int caminho[] = new int[tam];
 				menorCaminho(x, v.getId(), caminho);
-				for(int i = 0; i < tam; i++){
+				for(int i = 0; i < tam; i++) {
 					if(x == caminho[i] && i != 0 && i != tam -1){
 						gx++;
 						break;
@@ -770,18 +770,42 @@ public class Grafo {
 				}
 			}
 		}
+		double denominador = ((vertices.size() - 1) * (vertices.size() - 2));
+		double resultado = ((gx/ denominador) *2);
 		if(direcionado)
-			return gx / ((vertices.size() - 1) * (vertices.size() - 2));
-		
-		return (gx / ((vertices.size() - 1) * (vertices.size() - 2))) *2;
+			return (double)resultado;
+
+		return (double)resultado *2;
 	}
-	
-	public List<Double> intermediacaoTodos(){
+
+	public List<Double> intermediacaoTodos() {
 		List<Double> grauIntermediacaoTodos = new ArrayList<>();
-		
+
 		for(Vertice v : vertices)
 			grauIntermediacaoTodos.add(intermediacao(v.getId()));
-		
+
 		return grauIntermediacaoTodos;
 	}
+
+	public boolean ehEuleriano() {
+		int impares = 0;
+		if(this.isDirecionado()) {
+			return false;
+		}
+		for(Vertice v : vertices) {
+			int adjacencias = v.getGrauDeSaida();
+			if(adjacencias % 2 == 1) {
+				impares ++;
+			}
+			if(impares > 2) {
+				return false;
+			}
+		}
+		return impares != 1;
+	}
+
+	public boolean ehConexo() {
+		return this.componentes().size() == 1;
+	}
+
 }

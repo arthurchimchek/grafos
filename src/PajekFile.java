@@ -22,9 +22,9 @@ public class PajekFile {
 				int numeroVertices = Integer.parseInt(tmp);
 				for (int i = 0; i < numeroVertices;i++) {
 					String vertice = br.readLine();
-					String partesVertice[] = vertice.split(" ");
-					String nomeVertice = partesVertice[1].replaceAll("\"\"", "") + partesVertice[2].replaceAll("\"\"", "");
-					grafo.criaVertice(Integer.parseInt(partesVertice[0]), nomeVertice);
+					String partesVertice[] = vertice.split("\"");
+					String nomeVertice = partesVertice[1];
+					grafo.criaVertice(Integer.parseInt(partesVertice[0].trim()), nomeVertice);
 				}
 			}
 			else if(line.contains("*Arcs")){
@@ -51,7 +51,7 @@ public class PajekFile {
 		writer.printf("*Vertices %d\n", g.getNumeroDeVertices());
 		for(int i = 0; i < g.getNumeroDeVertices(); i++){
 			Vertice tmp = g.getVertices().get(i);
-			writer.printf("%d %s\n", tmp.getId(), tmp.getNome());
+			writer.printf("%d \"%s\"\n", tmp.getId(), tmp.getNome());
 		}
 		
 		if(g.isDirecionado())
