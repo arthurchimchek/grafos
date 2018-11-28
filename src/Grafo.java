@@ -807,7 +807,7 @@ public class Grafo {
 	}
 
 	public static Grafo gerarGrafoAleatorio(int nVertices, int nArestas, boolean conexo) {
-		Grafo g = new Grafo(!conexo);
+		Grafo g = new Grafo(false);
 
 		for(int i = 0; i < nVertices; i++) {
 			g.criaVertice("V" + i);
