@@ -32,9 +32,7 @@ public class Main {
 //		g.cria_adjacencia(6, 4, 1);
 		
 		g.cria_adjacencia(0, 1, 1);
-//		g.cria_adjacencia(0, 1, 1);
-		g.cria_adjacencia(1, 2, 1);
-		g.cria_adjacencia(2, 0, 1);
+		g.cria_adjacencia(0, 1, 1);
 		
 //		g.cria_adjacencia(1, 2, 1);
 //		g.cria_adjacencia(1, 2, 1);
@@ -47,9 +45,13 @@ public class Main {
 //		Grafo g = PajekFile.LerPajek("C:\\www\\grafos\\teste.txt");
 //		PajekFile.EscreverPajek(g, "C:\\www\\grafos\\teste3.txt");
 //		g.imprimir();
-		System.out.println("Euleriano: " + g.ehEuleriano());
-		System.out.println("Conexo: " + g.ehConexo());
-		System.out.println("Ciclico: " + g.ehCiclico());
+//		System.out.println("Euleriano: " + g.ehEuleriano());
+//		System.out.println("Conexo: " + g.ehConexo());
+//		System.out.println("Ciclico: " + g.ehCiclico());
+		
+		Grafo newG = Grafo.gerarGrafoAleatorio(3, 3, true);
+		newG.imprimir();
+		System.out.println("Conexo: " + newG.ehConexo());		
 		
 	}
 }

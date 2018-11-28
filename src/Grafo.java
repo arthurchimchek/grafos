@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 public class Grafo {
@@ -53,10 +54,7 @@ public class Grafo {
 	}
 
 	public Grafo() {
-		tam = 0;
-		vertices = new ArrayList<>();
-		listaDeAdjacencias = new LinkedList<>();
-		direcionado = false;
+		this(false);
 	}
 
 	public Grafo(boolean isDirecionado) {
@@ -806,6 +804,58 @@ public class Grafo {
 
 	public boolean ehConexo() {
 		return this.componentes().size() == 1;
+	}
+
+	public static Grafo gerarGrafoAleatorio(int nVertices, int nArestas, boolean conexo) {
+		Grafo g = new Grafo(!conexo);
+
+		for(int i = 0; i < nVertices; i++) {
+			g.criaVertice("V" + i);
+		}
+
+		int nArestasCriadas = 0;
+
+		List<Integer> iVisitados = new ArrayList<>();
+		List<Integer> jVisitados = new ArrayList<>();
+		if(conexo) {
+			for(int cont = 0; cont < nArestas; cont++) {
+				int i = -1;
+				int j = -1;
+				if(nArestasCriadas < nVertices - 1) {
+					do {
+						i = new Random().nextInt(nVertices);	
+					} while(iVisitados.contains(i));
+					iVisitados.add(i);
+					
+					do {
+						j = new Random().nextInt(nVertices);	
+					} while(jVisitados.contains(j) || i == j || g.listaDeAdjacencias.get(i).containsKey(j));
+					jVisitados.add(j);
+				} else {
+					i = new Random().nextInt(nVertices);
+					do {
+						j = new Random().nextInt(nVertices);	
+					} while(i == j);
+				}
+				g.cria_adjacencia(i, j, 1);
+				nArestasCriadas++;
+				
+			}
+		} else {
+			for(int cont = 0; cont < nArestas; cont++) {
+				int i = -1;
+				int j = -1;
+				do {
+					i = new Random().nextInt(nVertices);	
+				} while(iVisitados.contains(i));
+				iVisitados.add(i);
+			}
+		}
+
+
+
+
+		return g;
 	}
 
 }
